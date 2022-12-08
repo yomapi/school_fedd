@@ -2,7 +2,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { User } from './user/entities/user.entity';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -10,16 +13,21 @@ import { ConfigModule } from '@nestjs/config';
       envFilePath: `${__dirname}/../env/.${process.env.NODE_ENV}.env`,
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USER_NAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      entities: [],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      useFactory: (config: ConfigService) => ({
+        type: 'mysql',
+        host: config.get<string>('DB_HOST'),
+        port: config.get<number>('DB_PORT'),
+        username: config.get<string>('DB_USER_NAME'),
+        password: config.get<string>('DB_PASSWORD'),
+        database: config.get<string>('DB_NAME'),
+        entities: [User],
+        synchronize: process.env.NODE_ENV != 'prod',
+        namingStrategy: new SnakeNamingStrategy(),
+      }),
+      inject: [ConfigService],
     }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
