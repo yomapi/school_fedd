@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { User } from './user/entities/user.entity';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
-
+import { SchoolModule } from './school/school.module';
+import { MySqlConfigModule } from './config/db/config.module';
+import { MySqlConfigService } from './config/db/config.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -14,20 +14,12 @@ import { UserModule } from './user/user.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: (config: ConfigService) => ({
-        type: 'mysql',
-        host: config.get<string>('DB_HOST'),
-        port: config.get<number>('DB_PORT'),
-        username: config.get<string>('DB_USER_NAME'),
-        password: config.get<string>('DB_PASSWORD'),
-        database: config.get<string>('DB_NAME'),
-        entities: [User],
-        synchronize: process.env.NODE_ENV != 'prod',
-        namingStrategy: new SnakeNamingStrategy(),
-      }),
-      inject: [ConfigService],
+      imports: [MySqlConfigModule],
+      useClass: MySqlConfigService,
+      inject: [MySqlConfigService],
     }),
     UserModule,
+    SchoolModule,
   ],
   controllers: [AppController],
   providers: [AppService],

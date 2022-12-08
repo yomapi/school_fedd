@@ -12,12 +12,12 @@ export abstract class CustomBaseEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn({ name: 'create_at', comment: '생성일' })
+  @CreateDateColumn({ name: 'created_at', comment: '생성일' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'update_at', comment: '수정일' })
+  @UpdateDateColumn({ name: 'updated_at', comment: '수정일' })
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: 'delete_at', comment: '삭제일' })
+  @DeleteDateColumn({ name: 'deleted_at', comment: '삭제일' })
   deletedAt?: Date | null;
 }

@@ -6,7 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../src/user/entities/user.entity';
 import { AppService } from '../src/app.service';
 import { AppController } from '../src/app.controller';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
+import { getTypeOrmModuleForTest } from '../src/test-utils/typeorm-inmemory-setup';
 
 describe('signup and signin (e2e)', () => {
   let jwtToken: string;
@@ -19,12 +20,7 @@ describe('signup and signin (e2e)', () => {
           envFilePath: `${__dirname}/../env/.${process.env.NODE_ENV}.env`,
           isGlobal: true,
         }),
-        TypeOrmModule.forRoot({
-          type: 'sqlite',
-          database: ':memory:',
-          entities: [User],
-          synchronize: true,
-        }),
+        ...getTypeOrmModuleForTest(),
         UserModule,
       ],
       controllers: [AppController],

@@ -6,7 +6,7 @@ import { UserTypeValidator } from '../users.validator';
 @Entity({ name: 'users' })
 @Unique(['email'])
 export class User extends CustomBaseEntity {
-  @Column({ name: 'email' })
+  @Column({ name: 'email', type: 'varchar', length: 50 })
   @IsEmail({}, { message: 'Incorrect email' })
   email: string;
 

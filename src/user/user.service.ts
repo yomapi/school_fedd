@@ -26,14 +26,14 @@ export class UserService {
     // TODO: 비밀번호 암호화
     user.password = createUserDto.password;
     user.userType = createUserDto.userType;
-    await this.userRepository.save(user);
-    return { success: true };
+    const newUser = await this.userRepository.save(user);
+    return newUser;
   }
 
   async login(loginDto: LoginDto) {
     const user = await this.userRepository.findOneBy({ email: loginDto.email });
     // TODO: 비밀번호 암호화 적용
-    if (loginDto.password == user?.password) {
+    if (loginDto.password === user?.password) {
       const payload = { id: user.id, email: loginDto.email };
       return this.jwtService.sign(payload);
     }

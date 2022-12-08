@@ -20,7 +20,8 @@ export class UserController {
   }
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
-    return await this.userService.create(createUserDto);
+    await this.userService.create(createUserDto);
+    return { success: true };
   }
 
   @UseGuards(JwtAuthGuard)

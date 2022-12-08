@@ -9,7 +9,7 @@ import { isInEnum } from '../common/custom_validator.enums';
 @ValidatorConstraint({ async: false })
 export class UserTypeValidator implements ValidatorConstraintInterface {
   validate(userType: string, args: ValidationArguments) {
-    return isInEnum(userType, USER_TYPE) && userType.length == 1;
+    return isInEnum(userType, USER_TYPE) && userType.length === 1;
   }
 
   defaultMessage(args: ValidationArguments) {
