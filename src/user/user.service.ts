@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EmailAlreadyExistException } from './exceptions/email-already-exist-exception';
+import { hash, isHashValid } from '../common/encryption/hashing-hanlder';
 
 @Injectable()
 export class UserService {
@@ -23,8 +24,7 @@ export class UserService {
     }
     const user = new User();
     user.email = createUserDto.email;
-    // TODO: 비밀번호 암호화
-    user.password = createUserDto.password;
+    user.password = await hash(createUserDto.password);
     user.userType = createUserDto.userType;
     const newUser = await this.userRepository.save(user);
     return newUser;
@@ -32,8 +32,7 @@ export class UserService {
 
   async login(loginDto: LoginDto) {
     const user = await this.userRepository.findOneBy({ email: loginDto.email });
-    // TODO: 비밀번호 암호화 적용
-    if (loginDto.password === user?.password) {
+    if (user && isHashValid(loginDto.password, user.password)) {
       const payload = { id: user.id, email: loginDto.email };
       return this.jwtService.sign(payload);
     }
