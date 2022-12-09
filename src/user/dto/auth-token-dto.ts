@@ -1,8 +1,8 @@
 import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateSchoolNoticeDto {
-  @ApiProperty()
+export class AuthTokenDto {
   @IsString()
-  readonly contents!: string;
+  @ApiProperty()
+  readonly accessToken: string;
 }
