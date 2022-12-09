@@ -7,7 +7,7 @@ import { User } from '../user/entities/user.entity';
 import { School } from './entities/school.entity';
 import { isInstance } from 'class-validator';
 import { NotSchoolOwnerError } from './exceptions/not-school-owner-exception';
-import { getTestModule } from '../test-utils/typeorm-inmemory-setup';
+import { getTestModule } from '../test-utils/test-module-setup';
 
 describe('SchoolService', () => {
   let service: SchoolService;

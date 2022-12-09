@@ -1,6 +1,6 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { getTestModule } from '../src/test-utils/typeorm-inmemory-setup';
+import { getTestModule } from '../src/test-utils/test-module-setup';
 import { User } from '../src/user/entities/user.entity';
 import { School } from '../src/school/entities/school.entity';
 import { setTestSeedData } from '../src/test-utils/test-dataset';
