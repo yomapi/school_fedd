@@ -92,7 +92,7 @@ export class SchoolService {
   }
 
   async deleteNotice(userId: number, schoolId: number, noticeId: number) {
-    // 공지글이 존재하지 않을경우 throw error
+    // 공지글이 존재하지 않을경우 throw error 합니다
     const notice = await this.getNoticeOrReject(userId, schoolId, noticeId);
     // soft delete
     notice.deletedAt = new Date();
