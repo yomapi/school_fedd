@@ -3,23 +3,25 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-
+import { UserModule } from './user/user.module';
+import { SchoolModule } from './school/school.module';
+import { MySqlConfigModule } from './config/db/config.module';
+import { MySqlConfigService } from './config/db/config.service';
+import { SubscribeModule } from './subscribe/subscribe.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: `${__dirname}/../env/.${process.env.NODE_ENV}.env`,
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USER_NAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      entities: [],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [MySqlConfigModule],
+      useClass: MySqlConfigService,
+      inject: [MySqlConfigService],
     }),
+    UserModule,
+    SchoolModule,
+    SubscribeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
