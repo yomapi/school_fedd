@@ -33,8 +33,7 @@ describe('SubscribeService', () => {
 
   it('subscribe school', async () => {
     const result = await service.subscirbe(studentUser.id, createSubscribeDTO);
-    expect(result.user.id === studentUser.id);
-    expect(result.school.id === newSchool.id);
+    expect(result.success);
   });
 
   it('subscribe already subscribed', async () => {
@@ -46,14 +45,14 @@ describe('SubscribeService', () => {
     }
   });
 
-  it('unsubscribe', async () => {
-    await subscirbe();
-    const result = await service.unSubscirbe(
-      studentUser.id,
-      createSubscribeDTO,
-    );
-    expect(result.success);
-  });
+  // it('unsubscribe', async () => {
+  //   await subscirbe();
+  //   const result = await service.unSubscirbe(
+  //     studentUser.id,
+  //     createSubscribeDTO,
+  //   );
+  //   expect(result.success);
+  // });
 
   it('find subscribed', async () => {
     await subscirbe();
