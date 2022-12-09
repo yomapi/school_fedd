@@ -16,7 +16,7 @@ export class MySqlConfigService implements TypeOrmOptionsFactory {
       database: this.config.get<string>('DB_NAME'),
       synchronize: true,
       namingStrategy: new SnakeNamingStrategy(),
-      logging: true,
+      // logging: true,
       autoLoadEntities: true,
       dropSchema: process.env.NODE_ENV === 'test',
     };

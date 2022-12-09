@@ -1,26 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { SchoolService } from './school.service';
 import { CreateSchoolDto } from '../school/dto/create-school.dto';
 import { plainToInstance } from 'class-transformer';
-
 import { setTestSeedData } from '../test-utils/test-dataset';
-import { UserService } from '../user/user.service';
 import { CreateSchoolNoticeDto } from './dto/create-school-notice.dto';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { SchoolModule } from '../school/school.module';
-import { AppController } from '../app.controller';
-import { AppService } from '../app.service';
-import { JwtService } from '@nestjs/jwt';
-import { UserModule } from '../user/user.module';
-import { MySqlConfigModule } from '../config/db/config.module';
-import { MySqlConfigService } from '../config/db/config.service';
 import { User } from '../user/entities/user.entity';
 import { School } from './entities/school.entity';
 import { isInstance } from 'class-validator';
 import { NotSchoolOwnerError } from './exceptions/not-school-owner-exception';
-import exp from 'constants';
+import { getTestModule } from '../test-utils/typeorm-inmemory-setup';
 
 describe('SchoolService', () => {
   let service: SchoolService;
@@ -30,31 +17,7 @@ describe('SchoolService', () => {
   let newSchool: School;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot({
-          envFilePath: `${__dirname}/../../env/.test.env`,
-          isGlobal: true,
-        }),
-        // NOTE: 메모리 sqlite를 사용하고 싶을 때 사용
-        // TypeOrmModule.forRoot({
-        //   type: 'sqlite',
-        //   database: ':memory:',
-        //   entities: [User, School],
-        //   synchronize: true,
-        // }),
-
-        TypeOrmModule.forRootAsync({
-          imports: [MySqlConfigModule],
-          useClass: MySqlConfigService,
-          inject: [MySqlConfigService],
-        }),
-        UserModule,
-        SchoolModule,
-      ],
-      controllers: [AppController],
-      providers: [AppService, UserService, JwtService, SchoolService],
-    }).compile();
+    const module = await getTestModule();
     service = module.get<SchoolService>(SchoolService);
     ({ adminUser, schoolOwnedUser, studentUser, newSchool } =
       await setTestSeedData(module));

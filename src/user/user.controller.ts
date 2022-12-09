@@ -9,14 +9,14 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
-import { JwtAuthGuard } from '../jwt/jwt.gurad';
+import { JwtAuthGuard } from '../jwt/jwt.guard';
 
 @Controller('')
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Post('signin')
-  signin(@Body() loginDto: LoginDto) {
-    return this.userService.login(loginDto);
+  async signin(@Body() loginDto: LoginDto) {
+    return { accessToken: await this.userService.login(loginDto) };
   }
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
@@ -24,8 +24,8 @@ export class UserController {
     return { success: true };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('me')
+  @UseGuards(JwtAuthGuard)
   get(@Request() req) {
     return {
       email: req.user.email,

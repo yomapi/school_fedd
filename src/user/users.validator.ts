@@ -4,7 +4,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { USER_TYPE } from './enums/usertype.enum';
-import { isInEnum } from '../common/custom_validator.enums';
+import { isInEnum } from '../common/validator/custom_validator.enums';
 
 @ValidatorConstraint({ async: false })
 export class UserTypeValidator implements ValidatorConstraintInterface {
