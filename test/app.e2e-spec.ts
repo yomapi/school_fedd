@@ -94,6 +94,18 @@ describe('signup and signin (e2e)', () => {
       .expect(201);
   });
 
+  it('create school with student account', async () => {
+    const jwtToken = await getUserToken(studentUser);
+    const response = await request(app.getHttpServer())
+      .post('/school')
+      .set('Authorization', jwtToken)
+      .send({
+        location: '인천 송도',
+        name: '떡잎대학교',
+      })
+      .expect(403);
+  });
+
   afterAll(async () => {
     await app.close();
   });
