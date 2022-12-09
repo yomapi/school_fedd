@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { SchoolModule } from './school/school.module';
 import { MySqlConfigModule } from './config/db/config.module';
 import { MySqlConfigService } from './config/db/config.service';
+import { SubscribeModule } from './subscribe/subscribe.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -20,6 +21,7 @@ import { MySqlConfigService } from './config/db/config.service';
     }),
     UserModule,
     SchoolModule,
+    SubscribeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

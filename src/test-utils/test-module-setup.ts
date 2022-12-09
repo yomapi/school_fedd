@@ -13,6 +13,8 @@ import { Notice } from '../school/entities/school-notice.entity';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MySqlConfigModule } from '../config/db/config.module';
 import { MySqlConfigService } from '../config/db/config.service';
+import { SubscribeModule } from '../subscribe/subscribe.module';
+import { SubscribeService } from '../subscribe/subscribe.service';
 export const getTypeOrmModuleForTest = () => [
   TypeOrmModule.forRoot({
     type: 'sqlite',
@@ -36,9 +38,16 @@ export const getTestModule = async () => {
       }),
       UserModule,
       SchoolModule,
+      SubscribeModule,
     ],
     controllers: [AppController],
-    providers: [AppService, UserService, JwtService, SchoolService],
+    providers: [
+      AppService,
+      UserService,
+      JwtService,
+      SchoolService,
+      SubscribeService,
+    ],
   }).compile();
   return module;
 };

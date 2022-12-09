@@ -9,7 +9,6 @@ import { Notice } from './entities/school-notice.entity';
 import { CreateSchoolNoticeDto } from './dto/create-school-notice.dto';
 import { NotSchoolOwnerError } from './exceptions/not-school-owner-exception';
 import { NoticeNotExistError } from './exceptions/school-notice-not-exist-exception';
-import { Not, IsNull } from 'typeorm';
 
 @Injectable()
 export class SchoolService {
@@ -18,12 +17,9 @@ export class SchoolService {
     private readonly schoolRepository: Repository<School>,
     @InjectRepository(Notice)
     private readonly noticeRepository: Repository<Notice>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
   ) {}
   private async isUserOwnSchoolOrReject(userId: number, schoolId: number) {
     const school = await this.schoolRepository.findOne({
-      relations: ['user'],
       where: {
         user: { id: userId },
         id: schoolId,
@@ -43,16 +39,12 @@ export class SchoolService {
     include_deleted: boolean = false,
   ) {
     await this.isUserOwnSchoolOrReject(userId, schoolId);
-    const whereOption = {
-      school: { id: schoolId },
-      id: noticeId,
-    };
-    if (!include_deleted) {
-      whereOption['deletedAt'] = IsNull();
-    }
     const notice = await this.noticeRepository.findOne({
-      relations: ['school'],
-      where: whereOption,
+      withDeleted: include_deleted,
+      where: {
+        school: { id: schoolId },
+        id: noticeId,
+      },
     });
 
     if (notice) {
